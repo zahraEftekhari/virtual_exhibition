@@ -86,7 +86,7 @@ function init2() {
   // Renderer
   renderer = new WebGLRenderer({
     antialias: true,
-    canvas: document.getElementById("canvas"),
+    canvas: document.getElementById("view1"),
   });
 
   renderer.setPixelRatio(window.devicePixelRatio);
