@@ -32,7 +32,7 @@ function init() {
 
   // Cube
   const geometry = new BoxBufferGeometry(100, 100, 100);
-  const material = new MeshLambertMaterial({ color: 0xff0000 });
+  const material = new MeshLambertMaterial({ color: 0xc3e3ef });
   mesh = new Mesh(geometry, material);
   scene.add(mesh);
 
@@ -125,6 +125,6 @@ function animate2() {
   renderer.render(scene, camera2);
 
   // Auto rotate cube
-  mesh.rotation.x += 0;
-  mesh.rotation.y += 0.01;
+  mesh2.rotation.x += 0;
+  mesh2.rotation.y += 0.01;
 }
