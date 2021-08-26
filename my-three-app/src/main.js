@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import "./style.css"; // Import the stylesheet for webpack
 
+document.getElementById("view1").requestFullscreen();
 function main() {
   const canvas = document.querySelector('#view1');
   const renderer = new THREE.WebGLRenderer({canvas});
