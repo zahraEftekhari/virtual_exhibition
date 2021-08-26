@@ -1,130 +1,65 @@
-import {
-  BoxBufferGeometry,
-  DirectionalLight,
-  Mesh,
-  MeshLambertMaterial,
-  PerspectiveCamera,
-  Scene,
-  WebGLRenderer,
-} from "three";
-
+import * as THREE from "three";
 import "./style.css"; // Import the stylesheet for webpack
 
-let camera, camera2, scene, renderer, mesh, mesh2;
+function main() {
+  const canvas = document.querySelector('#view1');
+  const renderer = new THREE.WebGLRenderer({canvas});
 
-init();
-init2();
+  const fov = 75;
+  const aspect = 2;  // the canvas default
+  const near = 0.1;
+  const far = 5;
+  const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+  camera.position.z = 2;
 
-function init() {
-  // camera
-  camera = new PerspectiveCamera(
-    70,
-    window.innerWidth / window.innerHeight,
-    100,
-    1000
-  );
-  camera.position.z = 500;
-  camera.position.y = 100;
-  camera.position.x = 100;
+  const scene = new THREE.Scene();
 
-  // Create scene
-  scene = new Scene();
+  {
+    const color = 0xc3ecef;
+    const intensity = 1;
+    const light = new THREE.DirectionalLight(color, intensity);
+    light.position.set(-1, 2, 4);
+    scene.add(light);
+  }
 
-  // Cube
-  const geometry = new BoxBufferGeometry(100, 100, 100);
-  const material = new MeshLambertMaterial({ color: 0xc3e3ef });
-  mesh = new Mesh(geometry, material);
-  scene.add(mesh);
+  const boxWidth = 1;
+  const boxHeight = 1;
+  const boxDepth = 1;
+  const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
 
+  function makeInstance(geometry, color, x) {
+    const material = new THREE.MeshPhongMaterial({color});
 
-  // Lights
-  const directionalLight = new DirectionalLight(0xffffff, 0.5);
-  directionalLight.position.set(0, 1, 1);
-  scene.add(directionalLight);
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
 
-  // Renderer
-  renderer = new WebGLRenderer({
-    antialias: true,
-    canvas: document.getElementById("canvas"),
-  });
+    cube.position.x = x;
 
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    return cube;
+  }
 
-  window.addEventListener("resize", onWindowResize, false);
+  const cubes = [
+    makeInstance(geometry, 0xc3ecef,  0),
+    makeInstance(geometry, 0xc3ecef, -2),
+    makeInstance(geometry, 0xc3ecef,  2),
+  ];
 
-  animate();
+  function render(time) {
+    time *= 0.001;  // convert time to seconds
+
+    cubes.forEach((cube, ndx) => {
+      const speed = 1 + ndx * .1;
+      const rot = time * speed;
+      cube.rotation.x = rot;
+      cube.rotation.y = rot;
+    });
+
+    renderer.render(scene, camera);
+
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+
 }
 
-function init2() {
-  // camera
-  camera2 = new PerspectiveCamera(
-      70,
-      window.innerWidth / window.innerHeight,
-      100,
-      1000
-  );
-  camera2.position.z = 500;
-  camera2.position.y = 200;
-  camera2.position.x = 200;
-
-  // Create scene
-  scene = new Scene();
-
-  // Cube
-  const geometry2 = new BoxBufferGeometry(100, 100, 100);
-  const material2 = new MeshLambertMaterial({ color: 0xff0000 });
-  mesh2 = new Mesh(geometry2, material2);
-  scene.add(mesh);
-
-
-  // Lights
-  const directionalLight2 = new DirectionalLight(0xffffff, 0.5);
-  directionalLight2.position.set(0, 1, 1);
-  scene.add(directionalLight2);
-
-  // Renderer
-  renderer = new WebGLRenderer({
-    antialias: true,
-    canvas: document.getElementById("view1"),
-  });
-
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  window.addEventListener("resize", onWindowResize2, false);
-
-  animate2();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function onWindowResize2() {
-  camera2.aspect = window.innerWidth / window.innerHeight;
-  camera2.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-
-  // Auto rotate cube
-  mesh.rotation.x += 0;
-  mesh.rotation.y += 0.01;
-}
-
-function animate2() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera2);
-
-  // Auto rotate cube
-  mesh2.rotation.x += 0;
-  mesh2.rotation.y += 0.01;
-}
+main();
