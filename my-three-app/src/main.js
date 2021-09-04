@@ -4,6 +4,9 @@ import "./style.css"; // Import the stylesheet for webpack
 document.getElementById("view1").requestFullscreen();
 function main() {
   const canvas = document.querySelector('#view1');
+  const shape1 = document.querySelector('#shape1');
+  const shape2 = document.querySelector('#shape2');
+  const shape3 = document.querySelector('#shape3');
   const renderer = new THREE.WebGLRenderer({canvas});
 
   const fov = 75;
@@ -11,7 +14,31 @@ function main() {
   const near = 0.1;
   const far = 5;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-  camera.position.z = 2;
+  camera.zoom = 0.2;
+  camera.position.set(0,10,20);
+  
+
+  function actionsEvent(e){
+    e = e || window.event;
+    let location = camera.sphereRadius;
+    console.log(location);
+    if(e.keyCode == "38"){
+      z -= 0.1;
+      camera.position.set(x, y, z);
+    }
+    else if(e.keyCode = "40"){
+      z += 0.1;
+      camera.position.set(x, y, z);
+    }
+    else if(e.keyCode = "37"){
+      x -= 0.1;
+      camera.position.set(x, y, z);
+    }
+    else if(e.keyCode = "39"){
+      x += 0.1;
+      camera.position.set(x, y, z);
+    }
+  }
 
   const scene = new THREE.Scene();
 
