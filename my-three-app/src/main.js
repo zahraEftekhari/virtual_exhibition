@@ -10,13 +10,13 @@ function main() {
   const renderer = new THREE.WebGLRenderer({canvas});
 
   const fov = 75;
-  const aspect = 2;  // the canvas default
+  const aspect = window.innerWidth / window.innerHeight;  // the canvas default
   const near = 0.1;
   const far = 5;
   const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
   camera.zoom = 0.2;
   camera.position.set(0,10,20);
-  
+
 
   function actionsEvent(e){
     e = e || window.event;
@@ -43,7 +43,7 @@ function main() {
   const scene = new THREE.Scene();
 
   {
-    const color = 0xc3ecef;
+    const color = 0xFFFFFF;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
@@ -80,6 +80,7 @@ function main() {
       const rot = time * speed;
       cube.rotation.x = rot;
       cube.rotation.y = rot;
+      actionsEvent(e);
     });
 
     renderer.render(scene, camera);
